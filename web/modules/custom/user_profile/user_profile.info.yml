@@ -1,0 +1,5 @@
+name: User Profile
+type: module
+description: User Profiles
+core: 8.x
+package: SLS

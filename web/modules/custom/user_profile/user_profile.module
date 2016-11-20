@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains user_profile.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function user_profile_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the user_profile module.
+    case 'help.page.user_profile':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('User Profiles') . '</p>';
+      return $output;
+
+    default:
+  }
+}

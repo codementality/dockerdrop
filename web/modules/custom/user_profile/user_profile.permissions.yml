@@ -1,0 +1,22 @@
+add user profile entities:
+  title: 'Create new User Profile entities'
+
+administer user profile entities:
+  title: 'Administer User Profile entities'
+  description: 'Allow to access the administration form to configure User Profile entities.'
+  restrict access: true
+
+delete user profile entities:
+  title: 'Delete User Profile entities'
+
+edit user profile entities:
+  title: 'Edit User Profile entities'
+
+access user profile overview:
+  title: 'Access the User Profile overview page'
+
+view published user profile entities:
+  title: 'View published User Profile entities'
+
+view unpublished user profile entities:
+  title: 'View unpublished User Profile entities'

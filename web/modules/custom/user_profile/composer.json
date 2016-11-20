@@ -1,0 +1,6 @@
+{
+  "name": "sls/user_profile",
+  "description": "User Profiles",
+  "minimum-stability": "dev",
+  "require": { }
+}

@@ -1,0 +1,36 @@
+language: ruby
+sudo: required
+dist: trusty
+
+addons:
+  hosts:
+    - autism
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.8.0
+
+services:
+  - docker
+
+git:
+  depth: 5
+
+cache:
+  directories:
+  - $TRAVIS_BUILD_DIR/cache
+  - $TRAVIS_BUILD_DIR/.composer/cache
+
+before_install:
+  - export PATH=$PATH:$HOME/.local/bin
+  - docker version
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose version
+
+install:
+  - make install
+
+script:
+  - docker-compose exec -T --user 82 php bin/phpcs --standard=Drupal --extensions=php,module,inc,install,test,profile,theme tests/features web/modules/custom --ignore=*.css,*.min.js,*addthis_widget.js,*features.*.inc
+  - docker-compose exec -T --user 82 php bin/behat -c tests/behat.yml --tags=~@failing -f progress

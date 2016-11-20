@@ -1,0 +1,127 @@
+default:
+  suites:
+    default:
+      paths:
+        - %paths.base%/features/default
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+    rolesperms:
+      paths:
+        - %paths.base%/features/rolespermissions
+      contexts:
+        - RolesPermissionsContext:
+            roles_and_permissions:
+              free_member:
+                - 'access comments'
+                - 'post comments'
+                - 'skip comment approval'
+                - 'use text format restricted_html'
+                - 'access content'
+                - 'access shortcuts'
+                - 'access site-wide contact form'
+                - 'access user contact forms'
+                - 'access user profiles'
+                - 'edit terms in forums'
+                - 'edit terms in tags'
+                - 'search content'
+                - 'use advanced search'
+                - 'use text format basic_html'
+              paid_member:
+                - 'access comments'
+                - 'access content'
+                - 'access shortcuts'
+                - 'access site-wide contact form'
+                - 'access user contact forms'
+                - 'access user profiles'
+                - 'edit terms in forums'
+                - 'edit terms in tags'
+                - 'post comments'
+                - 'search content'
+                - 'skip comment approval'
+                - 'use advanced search'
+                - 'use text format basic_html'
+                - 'use text format restricted_html'
+              lifetime_member:
+                - 'access comments'
+                - 'access content'
+                - 'access shortcuts'
+                - 'access site-wide contact form'
+                - 'access user contact forms'
+                - 'access user profiles'
+                - 'edit terms in forums'
+                - 'edit terms in tags'
+                - 'post comments'
+                - 'search content'
+                - 'skip comment approval'
+                - 'use advanced search'
+                - 'use text format basic_html'
+                - 'use text format restricted_html'
+              affiliate_member:
+                - 'access comments'
+                - 'access content'
+                - 'access shortcuts'
+                - 'access site-wide contact form'
+                - 'access user contact forms'
+                - 'access user profiles'
+                - 'edit terms in forums'
+                - 'edit terms in tags'
+                - 'post comments'
+                - 'search content'
+                - 'skip comment approval'
+                - 'use advanced search'
+                - 'use text format basic_html'
+                - 'use text format restricted_html'
+              authenticated:
+                - 'access comments'
+                - 'post comments'
+                - 'skip comment approval'
+                - 'use text format restricted_html'
+                - 'access content'
+                - 'access shortcuts'
+                - 'access site-wide contact form'
+                - 'access user profiles'
+                - 'edit terms in forums'
+                - 'edit terms in tags'
+                - 'use advanced search'
+                - 'use text format basic_html'
+                - 'search content'
+              anonymous:
+                - 'access site-wide contact form'
+                - 'use text format restricted_html'
+        - Drupal\DrupalExtension\Context\DrupalContext
+    contenttypes:
+      paths:
+        - %paths.base%/features/content-types
+      contexts:
+        - ContentTypesContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+    content:
+      paths:
+        - %paths.base%/features/content
+      contexts:
+        - ContentContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2:
+        browser: 'firefox'
+        wd_host: selenium:4444/wd/hub
+      base_url: http://nginx
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: 'drupal'
+      drush:
+        alias: 'dev'
+      drupal:
+        drupal_root: '/var/www/html/web'
+      region_map:
+        footer: "#footer"
+        content: ".content"
+        taxonomy: "#taxonomy"
