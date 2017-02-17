@@ -76,3 +76,6 @@ download-behat-tests:
 	git clone --depth=1 https://github.com/codementality/dockerdrop-tests.git tests
 	rm -Rf tests/.git
 	curl -o .travis.yml https://s3.us-east-2.amazonaws.com/dockerdrop/traviscfg.yml
+pull-images:
+	docker-compose pull
+
