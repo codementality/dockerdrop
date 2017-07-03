@@ -3,18 +3,20 @@ FROM php:7.0-fpm
 MAINTAINER Lisa Ridley "lhridley@gmail.com"
 
 RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libpng12-dev \
-        libbz2-dev \
-        unzip \
-        zip \
-        mariadb-client \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libpng12-dev \
+    unzip \
+    zip \
+    mariadb-client \
     && docker-php-ext-install -j$(nproc) iconv mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql zip opcache bz2
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install opcache \
+    && docker-php-ext-install zip
 
 # Register the COMPOSER_HOME environment variable
 # Add global binary directory to PATH and make sure to re-export it
@@ -23,33 +25,28 @@ RUN apt-get update && apt-get install -y \
 ENV COMPOSER_HOME /composer
 ENV PATH /composer/vendor/bin:$PATH
 ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_VERSION 1.2.3
+ENV COMPOSER_VERSION 1.3.0
 
 # Setup the Composer installer
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
-    && php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) \
-    !== trim(file_get_contents('/tmp/composer-setup.sig'))) \
-    { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . \
-    PHP_EOL; exit(1); }" \
+    && php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" \
 
-# Install Composer
-    && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin \
-    --filename=composer --version=${COMPOSER_VERSION} && rm -rf /tmp/composer-setup.php \
-# Install Prestissimo plugin for Composer -- allows for parallel processing of
-# packages during install / update
+ # Install Composer
+    && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION} && rm -rf /tmp/composer-setup.php \
+ # Install Prestissimo plugin for Composer -- allows for parallel processing of packages during install / update
     && composer global require "hirak/prestissimo:^0.3" \
     && chown -Rf www-data:www-data /composer \
     && mkdir /var/www/docroot \
     && chown -Rf www-data:www-data /var/www \
-# Install Drush
+ # Install Drush
     && mkdir /usr/local/drush \
     && cd /usr/local/drush \
     && composer init --require=drush/drush:8.* -n \
     && composer config bin-dir /usr/local/bin \
     && composer install \
     && drush init -y \
-# Set up default location for drush alias files
+ # Set up default location for drush alias files
     && mkdir -p /etc/drush/site-aliases
 
 # Copy drush alias file into image
@@ -60,7 +57,6 @@ RUN apt-get update -qq && apt-get install -yq git golang-go \
     && mkdir -p /opt/go \
     && export GOPATH=/opt/go \
     && go get github.com/mailhog/mhsendmail
-
 # Add php.ini base file
 COPY php.ini /usr/local/etc/php/conf.d/php.ini
 
