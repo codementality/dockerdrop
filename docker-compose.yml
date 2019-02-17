@@ -3,20 +3,31 @@ services:
   web:
     build: ./docker/nginx/
     ports:
-     - "8000:80"
-    volumes:
-     - .:/var/www/html
+      - "8000:80"
+    volumes_from:
+      - php
     depends_on:
-     - php
-    environment:
-     #Make this the same for PHP
-     NGINX_DOCROOT: web
-     NGINX_SERVER_NAME: localhost
-     # Set to the same as the PHP_POST_MAX_SIZE, but use lowercase "m"
-     NGINX_MAX_BODY_SIZE: 20m
+      - php
+
   php:
     image: php:7.2-fpm
     expose:
-      - "9000"
+      - 9000
     volumes:
       - .:/var/www/html
+
+  db:
+    image: mariadb:10.4.2
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # The simple way to override the mariadb config.
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./data:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
+
+volumes:
+  mysql-data:
+    driver: local
